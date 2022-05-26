@@ -13,7 +13,7 @@ import backend.webSessions.webSessions as webSessions
 class config(mysqlc.connectionDtls):
   def __init__(self):
     self.coreLogLevel = os.environ.get('CORE_LOG_LEVEL', 'info').upper()
-    self.HTTPLogLevel = os.environ.get('HTTP_LOG_LEVEL', 'debug').upper()
+    self.HTTPLogLevel = os.environ.get('HTTP_LOG_LEVEL', 'info').upper()
     self.runMigs = os.getenv("RUN_MIGRATIONS", 'true').lower() in ('true', '1', 't')
     
     self.sqlPort = os.environ.get('MYSQL_PORT', 3306)
@@ -74,8 +74,8 @@ def initRootUser(mysqlobj, cfg, logger):
   else:
     logger.debug("ROOT_USER env var not set. Skipping root user setup")
     return None
-    
-if __name__ == "__main__":
+  
+def main():
   cfg = config()
     
   coreLogger, err = logger.LoggerFactory.get_logger("CORE", logLevel=cfg.coreLogLevel, mode="json")
@@ -124,4 +124,7 @@ if __name__ == "__main__":
   p.start()
 
   targCnx.handler(coreMysqlobj,coreLogger)
+    
+if __name__ == "__main__":
+  main()
  

@@ -22,13 +22,6 @@ CREATE TABLE IF NOT EXISTS targets(
   retentionUnit VARCHAR(255) NOT NULL DEFAULT 'DAY'
 );
 
-REPLACE INTO targets
-  (ID, name, host, port, enabled, inter, retentionVal, retentionUnit) 
-VALUES 
-	(1, "target1", "192.168.1.1", 22, false, 5, 2, 'MINUTE'),
-	(2, "target2", "google.com", 443, True, 2, 1, 'HOUR');
-
-
 CREATE TABLE IF NOT EXISTS connResults(
 	ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	timestamp DATETIME NOT NULL,

@@ -53,7 +53,7 @@ class MySQL:
           user=self.user,
           password=self.password,
           port=self.port,
-          autocommit=True
+          autocommit=True,
         )
       except mysql.connector.Error as e:
         self.logger.error("error while connecting to MySQL. Trying again... error:[%d]: %s" % (e.args[0], e.args[1]))

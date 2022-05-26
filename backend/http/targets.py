@@ -121,7 +121,7 @@ def __putTargetValidation(id,name,host,port,interval,retentionVal,retentionUnit)
   if not str(port).isdigit() or len(str(port)) >= 5 or port is None:
     errors.append({"port": "must be a number, less than 6 digits, not null"})
 
-  if not str(interval).isdigit() or len(str(interval)) > 10 or interval is None or interval < 2:
+  if not str(interval).isdigit() or len(str(interval)) > 10 or interval is None or int(interval) < 2:
     errors.append({"interval": "must be a number, less than 10 digits, greater than 2, not null"})
   
   if not str(retentionVal).isdigit() or len(str(retentionVal)) > 10 or retentionVal is None:

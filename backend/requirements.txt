@@ -1,0 +1,6 @@
+Flask
+Flask_Cors
+Flask_HTTPAuth
+mysql-connector-python
+validators
+waitress

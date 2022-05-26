@@ -71,7 +71,7 @@ def loginRequired(f):
 
 @app.route('/targets', methods=['GET', 'PUT', 'DELETE'])
 @requireJsonType
-# @loginRequired
+@loginRequired
 @debugLogger
 def targets():
   if request.method == 'GET':
@@ -127,6 +127,7 @@ def run(mysqlobj, logger):
     return 'Unexpected number of results returned when retrieving Flask session key' 
   
   app.config['SECRET_KEY'] = key[0][0]
+  app.config['APPLICATION_ROOT'] = "/api"
   app.logger = logger
   app.logger.propagate = False
   # app.run(port=5000)

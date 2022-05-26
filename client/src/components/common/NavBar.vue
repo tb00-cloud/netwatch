@@ -37,6 +37,7 @@
 import logoWhite from "@/assets/images/logo-white.svg";
 import { checkSessionState } from "@/services/check-session.service";
 import { showToast } from "@/services/toast.service";
+import { http } from "@/services/axios.service.js";
 import { eventBus } from "@/main";
 export default {
   data() {
@@ -80,15 +81,7 @@ export default {
     },
     async onLogout() {
       try {
-        const config = {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        };
-        this.axios.defaults.withCredentials = true;
-        const res = await this.axios.post(
-          "http://localhost:5000/logout",
-          config
-        );
+        const res = await http().post("logout");
         if (res.status == 200) {
           this.$session.destroy();
           this.setIsLoggedIn();
