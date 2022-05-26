@@ -238,7 +238,6 @@ export default {
     },
     async putTarget() {
       this.validate();
-      console.log(this.haveErrors);
       if (this.haveErrors) {
         return;
       }
@@ -263,7 +262,6 @@ export default {
         if (error.response && error.response.status == 401) {
           showToast("Forbidden. Log in with a valid account", "error");
         } else {
-          console.log(error);
           showToast("A server error ocurred", "error");
         }
       }

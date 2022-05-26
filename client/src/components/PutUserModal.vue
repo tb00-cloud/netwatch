@@ -101,18 +101,14 @@ export default {
   },
   methods: {
     async prePopulate(id) {
-      console.log("prepopulatecalled");
       const data = await this.getData(id);
       this.username = data.username;
       this.enabled = data.enabled;
-      console.log(this.username);
     },
     async getData(id) {
-      console.log("getting data for: " + id);
       try {
         const res = await http({ user_ids: id }).get("users");
         if (res.status == 200) {
-          console.log("the username is: " + res.data[0].username);
           return {
             username: res.data[0].username,
             enabled: res.data[0].enabled,
@@ -159,7 +155,6 @@ export default {
         };
       }
       try {
-        console.log(payload);
         const res = await http().put("users", payload);
         if (res.status == 200) {
           showToast("User saved", "success", 1500);
@@ -179,7 +174,6 @@ export default {
         } else if (error.response && error.response.status == 401) {
           showToast("Forbidden. Log in with a valid account", "error");
         } else {
-          console.log(error);
           showToast("A server error ocurred", "error");
         }
       }
