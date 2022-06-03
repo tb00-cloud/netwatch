@@ -51,4 +51,3 @@ docs/_build/
 
 # Node
 */node_modules/*
-backend/__pycache__/__main__.cpython-39.pyc
