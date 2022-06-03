@@ -1,16 +1,20 @@
-mysql-up:
-	docker network remove local_net0192
-	docker network create local_net0192
-	docker run --network local_net0192 --rm -d --name netwatch_mysql -v ~/python/netwatch/backend/sqlMigrations/:/data/application/ -p 3306:3306 -e MYSQL_ROOT_PASSWORD=qwerty mysql:latest --init-file /data/application/.init.sql
+#!/bin/bash
 
-mysql-down:
-	sudo docker kill netwatch_mysql
+# LOCAL DEV
+# ==========
 
-local-backend-run:
+dev-mysql:
+	docker network create local_net0192 || true
+	docker run --network local_net0192 -d --rm --name netwatch_mysql -v ~/python/netwatch/backend/sqlMigrations/:/data/application/ -p 3306:3306 -e MYSQL_ROOT_PASSWORD=qwerty mysql:latest --init-file /data/application/.init.sql
+
+dev-mysql-stop:
+	sudo docker kill netwatch_mysql || true
+
+dev-backend:
 #Wait for MySQL to be ready
 	while ! mysqladmin ping -h localhost -P 3306 --protocol=tcp -u root -pqwerty --silent; do sleep 2; echo "Sleeping"; done
 #Export ENV vars and run the app
-	export MYSQL_HOST=localhost &&\	
+	export MYSQL_HOST=localhost &&\
 	export MYSQL_DB=myapp &&\
 	export MYSQL_USER=root &&\
 	export MYSQL_PASSWORD=qwerty &&\
@@ -20,6 +24,18 @@ local-backend-run:
 	exportHTTP_LOG_LEVEL=info &&\
 	python3 -m backend . 
 
+dev-client:
+	gnome-terminal --tab --title="Client" -- yarn  --cwd client/ run serve
+
+dev-nginx:
+	gnome-terminal --tab --title="NGINX Proxy" -- docker run --network host --rm -it --name local-nginx -p 9090:909 -v ${PWD}/nginx-local-dev.conf:/etc/nginx/nginx.conf:rw nginx
+
+dev-compose: dev-mysql-stop dev-mysql dev-nginx dev-client 
+	gnome-terminal --tab --title="Backend" -- make dev-backend
+
+# PRODUCTION
+# ==========
+
 build:
 	yarn --cwd ./client/ run build 
 	docker build . -t tb00/netwatch:beta
@@ -27,10 +43,11 @@ build:
 publish:
 	docker push tb00/netwatch:beta
 
-# FOR LOCAL TESTING (Docker and non-Docker)
-dev-docker-up: mysql-up
+# PRODUCTION TESTING
+# ==================
+docker-up: dev-mysql-stop dev-mysql
 	while ! mysqladmin ping -h localhost -P 3306 --protocol=tcp -u root -pqwerty --silent; do sleep 2; echo "Sleeping"; done
-	docker run --network local_net0192 --rm -it -p 8080:8080 --name netwatch \
+	gnome-terminal --tab --title="Docker Netwatch" -- docker run --network local_net0192 --rm -it -p 8080:8080 --name netwatch \
 	-e MYSQL_HOST=netwatch_mysql \
 	-e MYSQL_DB=myapp \
 	-e MYSQL_USER=root \
@@ -41,10 +58,5 @@ dev-docker-up: mysql-up
 	-e HTTP_LOG_LEVEL=info \
 	netwatch:beta
 
-dev-docker-down: mysql-down
+docker-down: dev-mysql-stop
 	sudo docker kill netwatch
-
-dev-up: mysql-up local-backend-run
-#will not start client. Do this separately
-
-dev-down: mysql-down
