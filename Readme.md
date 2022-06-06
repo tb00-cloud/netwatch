@@ -62,6 +62,12 @@ docker run --network local_net0192 --rm -it -p 8080:8080 --name netwatch \
 netwatch:beta
 ```
 
+Currently, the application does not support HTTPS security directly. Instead, you should offload the SSL on a reverse proxy or application load balancer (layer 4).
+
+### High availability
+
+Deploying the application in a highly-available setup is currently not supported. There is no server-side caching or storage in use, so the limitation is the backend logic that performs the actual target connection attempts. For HA to be supported, clustering logic would need to be introduced. 
+
 ### Users
 
 The root user is optional. But, at least on first setup, you will need to create the root user to get access and create subsequent users. Once this is done, you could remove the root user in the application and not pass the environment variable on next run to prevent it being recreated. You can also just keep the root user if needed. It is recommended to set a strong root user password and change it periodically.
@@ -119,3 +125,23 @@ To aid development, there is a makefile with predefined targets. When developing
 Or, you can run ```make dev-compose``` ro run all of these commands and open them all, except MySQL, in terminal sessions.
 
 To publish, again use the makefile and run ```make build``` followed by ```make publish```. You can use ```make docker-up``` after building to production-test the build before publishing. This will start a fresh MySQL container (even if one is already running).
+
+
+## Plans
+
+Some future ideas for the project...
+
+| Function      | Notes | 
+|---------------|-------|
+| Backend       | SQL migration logic is basic. the application should check migration status and not blindly run all migrations in sequence. |
+| Backend       | Target connect daemon currently fetches target definition for MySQL on every connection attempt. This was done to account for target definition changes after creation. The target handler also does this, so there's a duplication of effort. Instead, the dameon should never fetch target definitions. The handler should handle it in some way (hash the data, use queues for example)
+| Client        | UI should be responsive |
+| Client        | Introduce user permissions systems |
+| Client        | Move away from cookie-auth |
+| Client        | Target history page should display the reasons for connection failures (in a table or as a narrative) |
+| Core Function | Allow for HTTP check as well as TCP |
+| Core Function | Support check schedule instead of 24/7 |
+| Core Function | Clustering and/or support for worker nodes to do selected checks or share work equally. Might allow for provisioning of nodes in different subnets etc to allow for more granular checks |
+| Core Function | Headless running |
+| Project       | Unit testing |
+| Project       | Semantic releases |
