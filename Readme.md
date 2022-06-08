@@ -62,7 +62,7 @@ docker run --network local_net0192 --rm -it -p 8080:8080 --name netwatch \
 netwatch:beta
 ```
 
-Currently, the application does not support HTTPS security directly. Instead, you should offload the SSL on a reverse proxy or application load balancer (layer 4).
+Currently, the application does not support HTTPS security directly. Instead, you should offload the SSL on a reverse proxy or application load balancer/gateway.
 
 ### High availability
 
