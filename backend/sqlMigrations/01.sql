@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS statusCodes(
    name VARCHAR(255) NOT NULL
 );
 
-REPLACE INTO statusCodes
+INSERT IGNORE INTO statusCodes
   (ID, name) 
 VALUES 
 	(0, "success"),
