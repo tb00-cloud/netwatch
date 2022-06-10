@@ -216,13 +216,13 @@ export default {
 
         if (!regex.test(this.password)) {
           array.push(
-            "Must contain: number, letter, character (length 6 - 128)"
+            "Must contain: number, letter, symbol (length 6 - 128)"
           );
         }
       } else {
         if (!regex.test(this.password)) {
           array.push(
-            "Must contain: number, letter, character (length 6 - 128)"
+            "Must contain: number, letter, symbol (length 6 - 128)"
           );
         }
       }
