@@ -63,7 +63,6 @@ def initRootUser(mysqlobj, cfg, logger):
     else:
       logger.info("no root user exists. Creating...")
       pwdPlain = cfg.rootPassword
-      pwdPlain = "root"
       pwd, psalt = crypto.new(pwdPlain)
     
       logger.info('root user created. Username: root Password: %s' % (pwdPlain))
