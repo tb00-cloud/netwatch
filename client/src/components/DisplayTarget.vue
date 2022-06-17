@@ -200,19 +200,27 @@ export default {
       return;
     },
     dateDiff(from, to) {
-      let diff = from.getTime() - to.getTime();
-      return (diff / (1000 * 3600 * 24)).toFixed(2);
+      let diff = to.getTime() - from.getTime();
+      return (diff / (1000 * 3600 * 24)).toFixed(10);
     },
     setGranularity(dayRange) {
       if (this.granularity.user == "auto") {
-        if (dayRange < 1) {
-          this.granularity.duration = 30;
-        } else if (dayRange > 1 && dayRange <= 3) {
-          this.granularity.duration = 60;
-        } else if (dayRange > 3 && dayRange <= 7) {
-          this.granularity.duration = 600;
+        if (dayRange <= 1) {
+          this.granularity.duration = 60; //1min
+        } else if (dayRange > 1 && dayRange <= 2) {
+          this.granularity.duration = 300; //5min
+        } else if (dayRange > 2 && dayRange <= 3) {
+          this.granularity.duration = 600; //10min
+        } else if (dayRange > 3 && dayRange <= 4) {
+          this.granularity.duration = 1800; //30min
+        } else if (dayRange > 4 && dayRange <= 5) {
+          this.granularity.duration = 3600; //1hour
+        } else if (dayRange > 5 && dayRange <= 6) {
+          this.granularity.duration = 10800; //3hours
+        } else if (dayRange > 6 && dayRange <= 7) {
+          this.granularity.duration = 21600; //6hours
         } else {
-          this.granularity.duration = 3600;
+          this.granularity.duration = 86400; //1day
         }
       } else {
         this.granularity.duration = parseInt(this.granularity.user);
@@ -240,8 +248,6 @@ export default {
           this.targetData.enabled = res.data[0].enabled;
           this.chartData.datasets[0].label =
             this.targetData.name + " (" + this.targetData.id + ")";
-
-          console.log(this.targetData);
 
           return res.data[0].history;
         }
